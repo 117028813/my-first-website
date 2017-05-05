@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>My first website</title>
+  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #app table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="app">
+  <table class="table table-striped">
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>rating</th>
+      <th>delete</th>
+    </tr>
+    <tr is="movie-component" v-for="item in items" v-bind:item="item"></tr>
+  </table>
+
+  <button class="btn btn-primary" id="addMovie" data-toggle="modal" data-target="#addMovieModal">add movie</button>
+</div>
+
+<div class="modal fade" id="addMovieModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" type="button" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title">Add movie</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="movieName">Movie name:</label>
+            <input type="text" class="form-control" id="movieName" placeholder="movie name" v-model="movieName">
+            <p class="text-warning">{{invalidName}}</p>
+          </div>
+          <div class="form-group">
+            <label for="movieRating">Movie rating:</label>
+            <input type="number" class="form-control" id="movieRating" placeholder="movie rating" v-model="movieRating">
+            <p class="text-warning">{{invalidRating}}</p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="button" v-on:click="addMovie">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<template id="movie">
+  <tr>
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.rating}}</td>
+    <td><button class="btn btn-default" v-on:click="deleteMovie">delete</button></td>
+  </tr>
+</template>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.3.2/vue.js"></script>
+<script>
+
+$.get('/movies', function (data) {
+
+  Vue.component('movie-component', {
+    template: '#movie',
+    props: ['item'],
+    methods: {
+      deleteMovie: function () {
+        console.log(this.item.id)
+        $.get('/movies/'+this.item.id, function (data) {
+          vm.items = data
+        })
+      }
+    }
+  })
+
+  let vm = new Vue({
+    el: '#app',
+    data: {
+      items: data
+    }
+  })
+
+
+  let addMovieModal = new Vue({
+    el: '#addMovieModal',
+    data: {
+      movieName: '',
+      movieRating: '',
+      invalidRating: '',
+      invalidName: ''
+    },
+    methods: {
+      addMovie: function () {
+        this.invalidRating = ''
+        this.invalidName = ''
+        let rating = parseInt(this.movieRating)
+        if (rating >= 0 && rating <= 10 && this.movieName) {
+          $.post('/movies/add', {name: this.movieName, rating: rating}, function (data) {
+            vm.items = data
+            $('#addMovieModal').modal('hide')
+            
+          })
+        } else if (!this.movieName) {
+          this.invalidName = 'plese input a movie name'
+        } else {
+          this.invalidRating = 'rating must between 0 and 10'
+        }
+        
+      }
+    }
+  })
+
+})
+
+
+
+
+</script>
+</body>
+</html>
