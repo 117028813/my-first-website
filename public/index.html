@@ -106,7 +106,7 @@ $.get('/movies', function (data) {
       addMovie: function () {
         this.invalidRating = ''
         this.invalidName = ''
-        let rating = parseInt(this.movieRating)
+        let rating = parseFloat(this.movieRating).toFixed(1)
         if (rating >= 0 && rating <= 10 && this.movieName) {
           $.post('/movies/add', {name: this.movieName, rating: rating}, function (data) {
             vm.items = data
