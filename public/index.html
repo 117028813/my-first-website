@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>My first website</title>
-  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="./lib/bootstrap.min.css">
   <style>
     #app table td {
       vertical-align: middle;
@@ -66,10 +67,15 @@
   </tr>
 </template>
 
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.bootcss.com/vue/2.3.2/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.3.2/vue.js"></script> -->
+<script src="./lib/jquery.min.js"></script>
+<script src="./lib/bootstrap.min.js"></script>
+<script src="./lib/vue.js"></script>
 <script>
+
+'use strict'
 
 $.get('/movies', function (data) {
 

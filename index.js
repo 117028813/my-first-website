@@ -1,3 +1,5 @@
+'use strict'
+
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
@@ -82,4 +84,6 @@ app.post('/movies/add', function (req, res) {
 })
 
 
-app.listen(3000)
+app.listen(3000, function () {
+  console.log('server running at http://localhost:3000/')
+})
